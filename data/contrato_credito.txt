@@ -1,0 +1,2 @@
+Clientes classificados como alto risco devem passar por análise manual antes da aprovação.
+A aprovação automática não deve ocorrer quando houver score abaixo de 600.

@@ -1,0 +1,4 @@
+Clientes com score abaixo de 600 são considerados de alto risco.
+Clientes entre 600 e 750 possuem risco moderado.
+Acima de 750 são considerados baixo risco.
+Histórico de inadimplência recente aumenta a criticidade da análise.
