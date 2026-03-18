@@ -1,8 +1,8 @@
 # 🚀 GenAI Risk Analyst Pro
 
-> 💡 Projeto inspirado em aplicações reais de IA utilizadas em empresas como Serasa Experian para análise de crédito, risco e compliance.
+> 💡 Practical GenAI application combining RAG, document retrieval and decision support workflows.
 
-Assistente de Inteligência Artificial Generativa para análise de crédito, risco e documentos corporativos.
+AI-powered assistant for credit risk, compliance and document analysis.
 
 ## 🎯 Objetivo
 
@@ -10,7 +10,7 @@ Demonstrar na prática a aplicação de IA Generativa em cenários de negócio, 
 
 ## 🧠 Sobre o projeto
 
-Este projeto simula um cenário real de aplicação de Inteligência Artificial Generativa em ambientes corporativos, especialmente nos contextos de crédito, risco e compliance.
+Este projeto aplica Inteligência Artificial Generativa em um contexto corporativo, com foco em crédito, risco e compliance.
 
 A solução utiliza arquitetura RAG (Retrieval-Augmented Generation) para recuperação contextual de informações e geração de respostas inteligentes, permitindo apoio à tomada de decisão baseada em dados.
 
@@ -107,8 +107,8 @@ O cliente apresenta alto risco, considerando score abaixo de 600 e histórico de
 
 ## 👨‍💻 Autor
 
-**Henrique Sembla**
-🔗 GitHub: https://github.com/Sembla
-📍 São Paulo – Brasil
+**Henrique Sembla**  
+🔗 GitHub: https://github.com/Sembla  
+📍 São Paulo – Brasil  
 
 Especialista em desenvolvimento de soluções com IA Generativa, com foco em automação, dados e aplicações corporativas.
