@@ -1,63 +1,59 @@
-# 🚀 GenAI Risk Analyst Pro
+# 📊 Data Insight AI
 
-> 💡 Practical GenAI application combining RAG, document retrieval and decision support workflows.
+> 💡 Projeto de IA aplicada à análise de dados, permitindo que usuários façam perguntas em linguagem natural e recebam respostas com base em indicadores de negócio.
 
-AI-powered assistant for credit risk, compliance and document analysis.
+Assistente de análise de dados com interface web, filtros interativos e respostas automáticas com apoio de LLM ou regras locais.
 
 ## 🎯 Objetivo
 
-Demonstrar na prática a aplicação de IA Generativa em cenários de negócio, integrando dados, automação e inteligência para apoio à análise de risco e tomada de decisão.
+Demonstrar uma aplicação prática de IA para exploração de dados, unindo visualização, métricas de negócio e perguntas em linguagem natural.
 
 ## 🧠 Sobre o projeto
 
-Este projeto aplica Inteligência Artificial Generativa em um contexto corporativo, com foco em crédito, risco e compliance.
+O sistema carrega uma base de vendas, calcula KPIs e permite que o usuário pergunte coisas como:
 
-A solução utiliza arquitetura RAG (Retrieval-Augmented Generation) para recuperação contextual de informações e geração de respostas inteligentes, permitindo apoio à tomada de decisão baseada em dados.
+* Qual categoria vende mais?
+* Qual região tem maior faturamento?
+* Qual é o ticket médio?
+* Qual o faturamento total?
 
 A aplicação pode responder de duas formas:
 
-* **Modo local**: resposta simulada por regras
-* **Modo OpenAI**: resposta gerada por LLM com base no contexto recuperado
+* **Modo local**: respostas baseadas em regras
+* **Modo OpenAI**: respostas geradas por LLM com base nos dados filtrados
 
 ## ⚙️ Tecnologias
 
 * Python
 * Streamlit
-* Scikit-learn
+* Pandas
 * python-dotenv
 * OpenAI API
-* RAG (Retrieval-Augmented Generation)
 
 ## 📂 Estrutura
 
 ```bash
-genai-risk-analyst-pro/
+data-insight-ai/
 ├── app.py
-├── rag.py
+├── insights.py
 ├── requirements.txt
 ├── .env.example
 ├── README.md
 └── data/
-    ├── politica_risco.txt
-    ├── contrato_credito.txt
-    ├── score_cliente.txt
-    └── parecer_compliance.txt
+    └── vendas.csv
 ```
 
 ## ▶️ Como executar
 
 ### 1. Instalar dependências
-
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 2. Configurar variáveis de ambiente
-
 Crie um arquivo `.env` com base no `.env.example`.
 
 ### 3. Rodar a aplicação
-
 ```bash
 streamlit run app.py
 ```
@@ -71,44 +67,20 @@ OPENAI_MODEL=gpt-4o-mini
 
 ## 💼 Aplicações
 
-* Análise de crédito
-* Risco e compliance
-* Atendimento interno inteligente
-* Consulta de políticas corporativas
-* Automação de triagem documental
+* Business Intelligence com IA
+* Exploração de dados em linguagem natural
+* Dashboards explicativos
+* Apoio à tomada de decisão
+* Assistentes analíticos para times de negócio
 
-## 📊 Exemplo de uso
+## 📊 Exemplo de perguntas
 
-**Pergunta:**
-
-> Esse cliente apresenta risco alto com base na política?
-
-**Resposta esperada:**
-O cliente apresenta alto risco, considerando score abaixo de 600 e histórico de atraso. A política indica necessidade de análise manual antes da aprovação.
-
-## 🏗️ Arquitetura da Solução
-
-1. Ingestão de documentos (políticas, contratos e dados)
-2. Processamento e vetorização (TF-IDF)
-3. Recuperação de contexto relevante (RAG)
-4. Geração de resposta:
-
-   * Modo local (regra)
-   * Modo LLM (OpenAI)
-5. Interface web para interação do usuário
-
-## 📈 Possíveis Evoluções
-
-* Integração com banco vetorial (FAISS / Pinecone)
-* Implementação de embeddings semânticos
-* Deploy em ambiente cloud (AWS / Azure)
-* Integração com APIs externas de score de crédito
-* Monitoramento e avaliação de respostas (LLM Observability)
+* Qual categoria vende mais?
+* Qual região tem maior faturamento?
+* Qual é o ticket médio?
+* Qual o faturamento total?
 
 ## 👨‍💻 Autor
 
 **Henrique Sembla**  
-🔗 GitHub: https://github.com/Sembla  
-📍 São Paulo – Brasil  
-
-Especialista em desenvolvimento de soluções com IA Generativa, com foco em automação, dados e aplicações corporativas.
+🔗 GitHub: https://github.com/Sembla

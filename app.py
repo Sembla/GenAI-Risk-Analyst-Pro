@@ -1,44 +1,63 @@
 import streamlit as st
-from rag import carregar_documentos, buscar_contexto, gerar_resposta
+from insights import carregar_dados, gerar_kpis, responder_pergunta, gerar_resumo
 
-st.set_page_config(page_title="GenAI Risk Analyst Pro", layout="wide")
+st.set_page_config(page_title="Data Insight AI", layout="wide", page_icon="📊")
 
-st.title("🤖 GenAI Risk Analyst Pro")
-st.caption("Assistente de IA Generativa para análise de crédito, risco e documentos")
+st.title("📊 Data Insight AI")
+st.caption("Análise de indicadores de negócio com IA Generativa")
+
+# Carregar dados
+df = carregar_dados("data/vendas.csv")
 
 with st.sidebar:
-    st.header("Configurações")
-    usar_llm = st.toggle("Usar OpenAI (se configurado)", value=True)
-    top_k = st.slider("Quantidade de trechos recuperados", 1, 3, 2)
-    st.markdown(
-        """
-        **Exemplos de perguntas**
-        - Esse cliente apresenta risco alto?
-        - O score permite aprovação automática?
-        - Quando a análise manual é obrigatória?
-        """
-    )
+    st.header("🎯 Filtros de Análise")
+    regioes = ["Todas"] + sorted(df["regiao"].unique().tolist())
+    categorias = ["Todas"] + sorted(df["categoria"].unique().tolist())
 
-documentos = carregar_documentos("data")
+    regiao = st.selectbox("Selecione a Região", regioes)
+    categoria = st.selectbox("Selecione a Categoria", categorias)
+    
+    st.divider()
+    usar_llm = st.toggle("Usar Inteligência Artificial (OpenAI)", value=True)
+    st.info("Ative para análises mais complexas e naturais.")
 
-col1, col2 = st.columns([1.3, 1])
+# Aplicar Filtros
+df_filtrado = df.copy()
+if regiao != "Todas":
+    df_filtrado = df_filtrado[df_filtrado["regiao"] == regiao]
+if categoria != "Todas":
+    df_filtrado = df_filtrado[df_filtrado["categoria"] == categoria]
 
-with col1:
-    pergunta = st.text_area("Digite sua pergunta", height=120, placeholder="Ex: Esse cliente apresenta risco alto?")
-    enviar = st.button("Analisar")
+# Exibição de KPIs
+kpis = gerar_kpis(df_filtrado)
+col1, col2, col3 = st.columns(3)
+col1.metric("Faturamento", f"R$ {kpis['faturamento']:,.2f}")
+col2.metric("Pedidos", int(kpis["pedidos"]))
+col3.metric("Ticket Médio", f"R$ {kpis['ticket_medio']:,.2f}")
 
-with col2:
-    st.subheader("Base carregada")
-    st.write(f"{len(documentos)} documento(s) disponível(is).")
+st.divider()
 
-if enviar and pergunta.strip():
-    contexto = buscar_contexto(pergunta, documentos, top_k=top_k)
-    resposta, modo = gerar_resposta(pergunta, contexto, usar_llm=usar_llm)
+# Layout em duas colunas para Resumo e Tabela
+c_data, c_sum = st.columns([2, 1])
 
-    st.subheader("📊 Resposta")
-    st.write(resposta)
+with c_data:
+    st.subheader("📋 Dados Selecionados")
+    st.dataframe(df_filtrado, use_container_width=True, height=300)
 
-    with st.expander("Contexto recuperado"):
-        st.code(contexto)
+with c_sum:
+    st.subheader("💡 Insight Rápido")
+    st.success(gerar_resumo(df_filtrado))
 
-    st.caption(f"Modo de resposta: {modo}")
+# Pergunta ao usuário
+st.divider()
+st.subheader("💬 Explore os dados em linguagem natural")
+pergunta = st.text_input("Pergunta", placeholder="Ex: Qual região teve o maior ticket médio?")
+
+if pergunta:
+    with st.spinner("Analisando base de dados..."):
+        resposta, modo = responder_pergunta(df_filtrado, pergunta, usar_llm=usar_llm)
+        st.chat_message("assistant").write(resposta)
+        st.caption(f"Mecanismo: {modo}")
+
+st.markdown("---")
+st.caption("Desenvolvido por Henrique Sembla")

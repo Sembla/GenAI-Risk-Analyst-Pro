@@ -1,0 +1,13 @@
+pedido_id,data,regiao,categoria,produto,quantidade,valor_total
+1001,2026-01-05,Sudeste,Eletrônicos,Fone Bluetooth,2,399.80
+1002,2026-01-06,Sul,Casa,Cafeteira,1,289.90
+1003,2026-01-06,Nordeste,Eletrônicos,Mouse Gamer,3,450.00
+1004,2026-01-07,Sudeste,Escritório,Cadeira,1,799.90
+1005,2026-01-08,Centro-Oeste,Casa,Air Fryer,2,899.80
+1006,2026-01-08,Sul,Escritório,Monitor,1,1200.00
+1007,2026-01-09,Norte,Eletrônicos,Teclado Mecânico,2,650.00
+1008,2026-01-10,Sudeste,Casa,Liquidificador,4,520.00
+1009,2026-01-10,Nordeste,Escritório,Notebook Stand,5,375.00
+1010,2026-01-11,Sudeste,Eletrônicos,Smartwatch,2,999.80
+1011,2026-01-12,Sul,Casa,Aspirador,1,699.90
+1012,2026-01-12,Centro-Oeste,Eletrônicos,Caixa de Som,3,780.00
