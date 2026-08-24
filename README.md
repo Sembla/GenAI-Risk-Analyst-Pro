@@ -1,86 +1,104 @@
-# 📊 Data Insight AI
+# GenAI Risk Analyst Pro
 
-> 💡 Projeto de IA aplicada à análise de dados, permitindo que usuários façam perguntas em linguagem natural e recebam respostas com base em indicadores de negócio.
+An educational prototype that separates deterministic risk rules, TF-IDF document retrieval and optional LLM explanations.
 
-Assistente de análise de dados com interface web, filtros interativos e respostas automáticas com apoio de LLM ou regras locais.
+> This repository uses fictional policies and synthetic cases. It must not be used for real credit, financial, compliance, insurance, employment or eligibility decisions.
 
-## 🎯 Objetivo
+## Why this architecture
 
-Demonstrar uma aplicação prática de IA para exploração de dados, unindo visualização, métricas de negócio e perguntas em linguagem natural.
+A language model should not silently determine a high-stakes classification. In this prototype:
 
-## 🧠 Sobre o projeto
+1. Python rules calculate the demonstration classification.
+2. TF-IDF retrieval selects relevant synthetic policy documents.
+3. The optional LLM explains the existing decision and cannot change it.
+4. The interface displays the rule reasons, policy version and retrieved sources.
 
-O sistema carrega uma base de vendas, calcula KPIs e permite que o usuário pergunte coisas como:
+## Architecture
 
-* Qual categoria vende mais?
-* Qual região tem maior faturamento?
-* Qual é o ticket médio?
-* Qual o faturamento total?
-
-A aplicação pode responder de duas formas:
-
-* **Modo local**: respostas baseadas em regras
-* **Modo OpenAI**: respostas geradas por LLM com base nos dados filtrados
-
-## ⚙️ Tecnologias
-
-* Python
-* Streamlit
-* Pandas
-* python-dotenv
-* OpenAI API
-
-## 📂 Estrutura
-
-```bash
-data-insight-ai/
-├── app.py
-├── insights.py
-├── requirements.txt
-├── .env.example
-├── README.md
-└── data/
-    └── vendas.csv
+```mermaid
+flowchart TD
+    A[Synthetic case] --> B[Deterministic risk engine]
+    C[Synthetic policy documents] --> D[TF-IDF retrieval]
+    B --> E[Decision and rule reasons]
+    D --> F[Grounding context]
+    E --> G[Local or optional LLM explanation]
+    F --> G
 ```
 
-## ▶️ Como executar
+| Component | Responsibility |
+|---|---|
+| `risk_engine.py` | Typed policy, case validation and deterministic classification |
+| `retrieval.py` | TF-IDF document indexing, ranking and source scores |
+| `explanations.py` | Local explanation that requires no external service |
+| `llm_service.py` | Optional explanation adapter; it receives the existing decision |
+| `app.py` | Streamlit interface for the synthetic demonstration |
+| `tests/` | Boundary, classification and retrieval tests |
 
-### 1. Instalar dependências
+## Run locally
+
 ```bash
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-```
-
-### 2. Configurar variáveis de ambiente
-Crie um arquivo `.env` com base no `.env.example`.
-
-### 3. Rodar a aplicação
-```bash
 streamlit run app.py
 ```
 
-## 🔐 Variáveis de ambiente
+On Windows PowerShell:
 
-```env
-OPENAI_API_KEY=sua_chave_aqui
-OPENAI_MODEL=gpt-4o-mini
+```powershell
+.venv\Scripts\Activate.ps1
 ```
 
-## 💼 Aplicações
+The application works without an API key. To enable optional explanations:
 
-* Business Intelligence com IA
-* Exploração de dados em linguagem natural
-* Dashboards explicativos
-* Apoio à tomada de decisão
-* Assistentes analíticos para times de negócio
+```bash
+cp .env.example .env
+```
 
-## 📊 Exemplo de perguntas
+Set `OPENAI_API_KEY` in `.env`. The OpenAI mode is disabled by default.
 
-* Qual categoria vende mais?
-* Qual região tem maior faturamento?
-* Qual é o ticket médio?
-* Qual o faturamento total?
+## Run tests
 
-## 👨‍💻 Autor
+```bash
+python -m unittest discover -s tests -v
+```
 
-**Henrique Sembla**  
-🔗 GitHub: https://github.com/Sembla
+The tests cover threshold boundaries, manual-review flags, invalid inputs, retrieval ranking, result limits and empty questions.
+
+## Demonstration rules
+
+The bundled `demo_policy.json` contains fictional score thresholds and review flags. They exist to make the software behavior reproducible, not to represent a real institution's underwriting policy.
+
+The application never performs an approval. Its output contains:
+
+- A synthetic classification.
+- Whether a demonstration manual-review flag was triggered.
+- Transparent rule reasons.
+- The active fictional policy version.
+- Retrieved synthetic source documents.
+
+## What changed from the initial prototype
+
+- Removed the claim that the project simulates a named company's real process.
+- Replaced a single mixed module with separate decision, retrieval and explanation layers.
+- Prevented the LLM from changing the deterministic classification.
+- Removed personal-looking example data and replaced it with a generic case identifier.
+- Added explicit safety boundaries, typed models and automated tests.
+
+## Limitations
+
+- TF-IDF retrieval is lexical and does not provide semantic embeddings.
+- The policy and case are intentionally small and synthetic.
+- There is no authentication, audit database, model evaluation or production monitoring.
+- The prototype does not satisfy regulatory, fairness or explainability requirements for real decisions.
+
+## Next steps
+
+- Add retrieval evaluation fixtures and citation-quality metrics.
+- Add immutable decision logs without personal data.
+- Introduce access controls and policy-version lifecycle management.
+- Add a formal risk and fairness assessment before any non-demo use.
+
+## Author
+
+Henrique Sembla — [GitHub](https://github.com/Sembla) · [LinkedIn](https://www.linkedin.com/in/henriquessembla)

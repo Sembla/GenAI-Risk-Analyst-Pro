@@ -1,0 +1,1 @@
+Synthetic demonstration review guidance. A recent late payment or unverified income triggers manual review in the demo workflow. The application never performs an automatic approval. A human must review the evidence and the applicable real policy outside this prototype.

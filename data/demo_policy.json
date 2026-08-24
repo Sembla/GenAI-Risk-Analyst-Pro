@@ -1,0 +1,7 @@
+{
+  "version": "synthetic-demo-v1",
+  "high_risk_below": 600,
+  "low_risk_at_or_above": 750,
+  "manual_review_on_unverified_income": true,
+  "manual_review_on_recent_late_payments": true
+}

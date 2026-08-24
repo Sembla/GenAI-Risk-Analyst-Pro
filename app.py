@@ -1,63 +1,75 @@
+from __future__ import annotations
+
+from pathlib import Path
+
 import streamlit as st
-from insights import carregar_dados, gerar_kpis, responder_pergunta, gerar_resumo
 
-st.set_page_config(page_title="Data Insight AI", layout="wide", page_icon="📊")
+from explanations import local_explanation
+from llm_service import explain_decision
+from retrieval import load_documents, retrieve
+from risk_engine import DemoCase, evaluate_case, load_policy
 
-st.title("📊 Data Insight AI")
-st.caption("Análise de indicadores de negócio com IA Generativa")
 
-# Carregar dados
-df = carregar_dados("data/vendas.csv")
+ROOT = Path(__file__).parent
+
+st.set_page_config(page_title="GenAI Risk Analyst Pro", layout="wide")
+st.title("GenAI Risk Analyst Pro")
+st.caption("Educational prototype: deterministic rules, document retrieval and optional LLM explanation")
+
+st.warning(
+    "This application uses synthetic data and demonstration policies. It must not be used "
+    "for real credit, financial, compliance or eligibility decisions."
+)
+
+policy = load_policy(ROOT / "data" / "demo_policy.json")
+documents = load_documents(ROOT / "data" / "knowledge")
 
 with st.sidebar:
-    st.header("🎯 Filtros de Análise")
-    regioes = ["Todas"] + sorted(df["regiao"].unique().tolist())
-    categorias = ["Todas"] + sorted(df["categoria"].unique().tolist())
+    st.header("Synthetic case")
+    score = st.slider("Demo score", 0, 1000, 580)
+    late_payments = st.number_input("Recent late payments", min_value=0, max_value=12, value=1)
+    income_verified = st.checkbox("Income verified", value=False)
+    use_llm = st.toggle("Use optional OpenAI explanation", value=False)
 
-    regiao = st.selectbox("Selecione a Região", regioes)
-    categoria = st.selectbox("Selecione a Categoria", categorias)
-    
-    st.divider()
-    usar_llm = st.toggle("Usar Inteligência Artificial (OpenAI)", value=True)
-    st.info("Ative para análises mais complexas e naturais.")
+case = DemoCase(
+    case_id="DEMO-001",
+    score=score,
+    recent_late_payments=int(late_payments),
+    income_verified=income_verified,
+)
+decision = evaluate_case(case, policy)
 
-# Aplicar Filtros
-df_filtrado = df.copy()
-if regiao != "Todas":
-    df_filtrado = df_filtrado[df_filtrado["regiao"] == regiao]
-if categoria != "Todas":
-    df_filtrado = df_filtrado[df_filtrado["categoria"] == categoria]
+classification_col, review_col, policy_col = st.columns(3)
+classification_col.metric("Classification", decision.classification.upper())
+review_col.metric("Manual review", "YES" if decision.manual_review else "NO")
+policy_col.metric("Policy", decision.policy_version)
 
-# Exibição de KPIs
-kpis = gerar_kpis(df_filtrado)
-col1, col2, col3 = st.columns(3)
-col1.metric("Faturamento", f"R$ {kpis['faturamento']:,.2f}")
-col2.metric("Pedidos", int(kpis["pedidos"]))
-col3.metric("Ticket Médio", f"R$ {kpis['ticket_medio']:,.2f}")
+st.subheader("Transparent rule reasons")
+for reason in decision.reasons:
+    st.write(f"- {reason}")
 
-st.divider()
+st.subheader("Ask about the demonstration policy")
+question = st.text_input(
+    "Question",
+    value="Quando uma revisão manual é necessária?",
+)
 
-# Layout em duas colunas para Resumo e Tabela
-c_data, c_sum = st.columns([2, 1])
+if question:
+    retrieved = retrieve(question, documents, top_k=2)
+    if use_llm:
+        try:
+            answer = explain_decision(decision, retrieved, question)
+            mode = "OpenAI explanation of deterministic decision"
+        except Exception as error:
+            answer = local_explanation(case, decision)
+            mode = f"Local fallback ({type(error).__name__})"
+    else:
+        answer = local_explanation(case, decision)
+        mode = "Local deterministic explanation"
 
-with c_data:
-    st.subheader("📋 Dados Selecionados")
-    st.dataframe(df_filtrado, use_container_width=True, height=300)
-
-with c_sum:
-    st.subheader("💡 Insight Rápido")
-    st.success(gerar_resumo(df_filtrado))
-
-# Pergunta ao usuário
-st.divider()
-st.subheader("💬 Explore os dados em linguagem natural")
-pergunta = st.text_input("Pergunta", placeholder="Ex: Qual região teve o maior ticket médio?")
-
-if pergunta:
-    with st.spinner("Analisando base de dados..."):
-        resposta, modo = responder_pergunta(df_filtrado, pergunta, usar_llm=usar_llm)
-        st.chat_message("assistant").write(resposta)
-        st.caption(f"Mecanismo: {modo}")
-
-st.markdown("---")
-st.caption("Desenvolvido por Henrique Sembla")
+    st.write(answer)
+    st.caption(f"Mode: {mode}")
+    with st.expander("Retrieved sources"):
+        for document in retrieved:
+            st.markdown(f"**{document.source}** — similarity `{document.score:.3f}`")
+            st.write(document.content)

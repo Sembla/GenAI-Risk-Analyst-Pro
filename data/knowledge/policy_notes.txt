@@ -1,0 +1,1 @@
+Synthetic demonstration policy. Scores below the configured high-risk threshold trigger the high classification. Scores at or above the configured low-risk threshold trigger the low classification. Values between the thresholds trigger the moderate classification. These rules are fictional and exist only to test the software architecture.
