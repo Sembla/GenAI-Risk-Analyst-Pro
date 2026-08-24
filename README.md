@@ -1,5 +1,7 @@
 # GenAI Risk Analyst Pro
 
+[![Tests](https://github.com/Sembla/GenAI-Risk-Analyst-Pro/actions/workflows/tests.yml/badge.svg)](https://github.com/Sembla/GenAI-Risk-Analyst-Pro/actions/workflows/tests.yml)
+
 An educational prototype that separates deterministic risk rules, TF-IDF document retrieval and optional LLM explanations.
 
 > This repository uses fictional policies and synthetic cases. It must not be used for real credit, financial, compliance, insurance, employment or eligibility decisions.
@@ -64,6 +66,8 @@ python -m unittest discover -s tests -v
 ```
 
 The tests cover threshold boundaries, manual-review flags, invalid inputs, retrieval ranking, result limits and empty questions.
+
+The same test suite runs automatically on every push and pull request through GitHub Actions.
 
 ## Demonstration rules
 
